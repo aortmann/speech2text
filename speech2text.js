@@ -1,9 +1,10 @@
 const speech = require('@google-cloud/speech');
 const fs = require('fs');
 const path = require('path');
- 
+const ora = require('ora');
+
 const projectId = 'despegar';
- 
+
 const client = new speech.SpeechClient({
   projectId: projectId,
   keyFilename: path.join(__dirname, 'auth.json')
@@ -29,14 +30,12 @@ const request = {
   config: config,
 };
 
-var twirlTimer = (function() {
-  var P = ["\\", "|", "/", "-"];
-  var x = 0;
-  return setInterval(function() {
-    process.stdout.write("\r" + P[x++]);
-    x &= 3;
-  }, 100);
-})();
+process.stdout.write('\033c');
+const spinner = ora({
+	color: 'blue',
+	text: 'Transcribiendo'
+}).start();
+
 
 client
   .recognize(request)
@@ -45,8 +44,9 @@ client
     const transcription = response.results
       .map(result => result.alternatives[0].transcript)
       .join('\n');
-    clearInterval(twirlTimer);
-    console.log(`Transcripción: ${transcription}`);
+    spinner.stop();
+    process.stdout.write('\033c');
+    console.log(`${transcription}`);
   })
   .catch(err => {
     clearInterval(twirlTimer);
