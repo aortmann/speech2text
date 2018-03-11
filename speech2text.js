@@ -45,8 +45,13 @@ client
       .map(result => result.alternatives[0].transcript)
       .join('\n');
     spinner.stop();
+    
+    let fn = fileName.split("/");
+    fn = fn[fn.length - 1];
+    
     process.stdout.write('\033c');
-    console.log(`${transcription}`);
+    console.log(`Archivo: ${fn}`);
+    console.log(`Transcripción: ${transcription}`);
   })
   .catch(err => {
     clearInterval(twirlTimer);
