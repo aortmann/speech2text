@@ -1,4 +1,4 @@
-return the transcription of an opus file
+# This scripts return the transcription of an opus file using google text2speech services.
 
 ## in .bashrc:
 
